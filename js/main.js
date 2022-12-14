@@ -2,9 +2,12 @@
 
 //DOM Elements:
 
-document.querySelector('button').addEventListener('click', getFetch)
+document.querySelector('.search').addEventListener('click', getFetch)
+document.querySelector('.random').addEventListener('click', getRandomImage)
 let search = document.querySelector('input')
-let h2 = document.querySelector('h2')
+let artist = document.querySelector('.artist')
+let title = document.querySelector('.title')
+let year = document.querySelector('.year')
 let img = document.querySelector('img')
 // let h3 = document.querySelector('h3')
 let next = document.querySelector('.next')
@@ -13,6 +16,11 @@ let previous = document.querySelector('.previous')
 // document.querySelector('.previous').addEventListener('click', previousOne)
 
 let sunflowerArray = []
+let total = []
+let randomID = 0
+let totalArray = []
+let imageArray = []
+
 
 function random(min, max) {
   return Math.floor(Math.random() * (max - min + 1))
@@ -23,7 +31,6 @@ function sunflowerFetch(){
   const choice = document.querySelector('input').value
   const url = `https://collectionapi.metmuseum.org/public/collection/v1/search?hasImages=true&q=`+choice
   
-
   fetch(url)
       .then(res => res.json()) // parse response as JSON
       .then(data => {
@@ -33,8 +40,7 @@ function sunflowerFetch(){
           console.log(`error ${err}`)
       });
 }
-
-// sunflowerFetch()
+sunflowerFetch()
 
 
 
@@ -48,11 +54,15 @@ function getFetch(){
       .then(res => res.json()) // parse response as JSON
       .then(data => {
 
+        //console.log(data)
         if (data.primaryImage) {
             img.src = data.primaryImage
+            artist.innerText = `${data.artistDisplayName}`
+            title.innerText = `${data.title}`
+            year.innerText = `${data.objectDate}`
         } else {
           getFetch()
-        }
+        } 
       })
 
       .catch(err => {
@@ -61,46 +71,82 @@ function getFetch(){
 }
 
 
+function getRandomID() {
+  let value = random(0, 483095)
+  const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects`
+  fetch(url)
+      .then(res => res.json()) // parse response as JSON
+      .then(data => {
 
-//////****  With Next & Previous Buttons   *******///////
-// fetch(url)
-//       .then(res => res.json()) // parse response as JSON
+        total = data
+        //console.log(total.objectIDs.length)
+        // console.log(total)
+        // console.log(total.objectIDs[value])
+        randomID = total.objectIDs[value]
+        // console.log(randomID)
+      })
+
+      .catch(err => {
+          console.log(`error ${err}`)
+      });
+}
+
+
+function getRandomImage(){
+  getRandomID()
+  const choice = document.querySelector('input').value
+  const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects/${randomID}` 
+
+  fetch(url)
+      .then(res => res.json()) // parse response as JSON
+      .then(data => {
+
+        // console.log(data)
+
+        if (data.primaryImage) {
+          img.src = data.primaryImage
+          artist.innerText = `${data.artistDisplayName}`
+          title.innerText = `${data.title}`
+          year.innerText = `${data.objectDate}`
+      } else {
+        getRandomImage()
+      }
+
+      })
+      .catch(err => {
+          console.log(`error ${err}`)
+      });
+}
+
+
+////////  Experimenting on Filtering Image Results ///////////
+// function imageFilter() {
+//   const url = `https://collectionapi.metmuseum.org/public/collection/v1/objects`
+
+//   fetch(url)
+//       .then(response => response.json()) // parse response as JSON
 //       .then(data => {
-//        // console.log(data.drinks)
 
-//         let i = 0;
-//         function display() {
-//           h2.innerText = 
-//           img.src = 
-//         }
+//         let invalidEntries = 0;
 
-//         if(data.drinks.length === 1) {
-//           display(0)
-//         } 
-        
-//         else {
-//           next.style.visibility = 'visible';
-//           previous.style.visibility = 'visible'
-//           document.querySelector('.next').addEventListener('click', nextOne)
-//           document.querySelector('.previous').addEventListener('click', previousOne)
-          
-//           display(0)
-          
-//           function nextOne() {
-//             i += 1;
-//             // i = Math.min(i++, data.drinks.length-1)
-//             display(i)
+//         console.log(data)
+//         totalArray = data.objectIDs[0]
+//         console.log(totalArray)
+
+//         function hasImage(item) {
+//           if (totalArray.objectIDs[value].primaryImage) {
+//             return true
+//           } else {
+//             invalidEntries++
+//             return false
 //           }
-          
-//           function previousOne() {
-//             i--;
-//             i = Math.max(i--, 0)
-//             display(i)
-//           }        
 //         }
-//       })
 
+//         imageArray = totalArray.filter(hasImage)
+//         console.log(imageArray.objectIDs.length)
+
+//       })
 //       .catch(err => {
 //           console.log(`error ${err}`)
 //       });
-// }
+//   }

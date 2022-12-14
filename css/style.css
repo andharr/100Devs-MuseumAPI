@@ -10,15 +10,61 @@
 /******************************************
 /* LAYOUT
 /*******************************************/
-img{
-  display: block;
-  margin: 0 auto;
-  width: 300px;
-  height: auto;
+
+body {
+  background-color: #94a3b8;
+  font-family: 'Roboto', sans-serif;
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.info {
+  grid-column: 1;
+  padding-left: 5vh;
+  /* margin-top: 10vh; */
+}
+
+.buttonBlock {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 300px;
+  gap: .5rem;
+}
+
+.title {
+  font-style: italic;
+}
+
+.artist-info, .title-info {
+  display: flex;
 }
 
 .next, .previous {
   visibility: hidden;
+}
+
+.imageWrapper {
+  grid-column: 2;
+  position: relative;
+  min-height: 100vh;
+  /* background-color: yellow; */
+}
+
+.imageCover {
+  /* grid-column: 2; */
+  /* margin-top: 10vh; */
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  /* z-index: 99; */
+  /* border: 2px solid black; */
+}
+
+img{
+  display: block;
+  margin: 0 auto;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 
